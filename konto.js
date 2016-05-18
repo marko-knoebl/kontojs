@@ -23,6 +23,27 @@ var konto;
     ];
   };
 
+  /**
+   * Add a new account to the dataset
+   * dataset.addAccount({id: 'main', openDate: '2015-03-04'});
+   */
+  konto.Dataset.prototype.addAccount = function(parameters) {
+    if (parameters === undefined) {
+      throw new Error("addAccount cannot be called without arguments");
+    }
+    if (!parameters.id) {
+      throw new Error("cannot create account without assigning an id");
+    }
+    var account = {};
+    ;['id', 'initialBalance', 'openDate'].forEach(function(parameter) {
+      if (parameters[parameter]) {
+        account[parameter] = parameters[parameter];
+      }
+    });
+    this.accounts.push(account);
+    return account;
+  };
+
   konto.Dataset.prototype.createSampleTransactionData = function() {
     var sampleDetails = [
       'mcDonalds',

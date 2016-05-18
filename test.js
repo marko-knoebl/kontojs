@@ -19,6 +19,26 @@ describe('Dataset', function() {
     expect(dataset.accounts.length).toBe(1);
   });
 
+  describe('addAccount', function() {
+    beforeEach(function() {
+      dataset.accounts = [dataset.accounts[0]];
+    });
+    it('should fail if not given parameters', function() {
+      expect(dataset.addAccount).toThrow(
+        new Error("addAccount cannot be called without arguments")
+      );
+    });
+    it('should add and return an account', function() {
+      var account = dataset.addAccount({
+        id: 'main',
+        openDate: '2015-02-02'
+      });
+      expect(account.id).toBe('main');
+      expect(account.openDate).toBe('2015-02-02');
+      expect(dataset.accounts.length).toBe(2);
+    });
+  });
+
   describe('Sample dataset', function() {
     beforeEach(function() {
       dataset.transactions.push({id: 'test', amount: 23});
