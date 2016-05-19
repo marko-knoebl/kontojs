@@ -87,9 +87,9 @@ describe('Dataset', function() {
     });
   });
 
-  describe('Sample dataset', function() {
+  describe('Random dataset', function() {
     beforeEach(function() {
-      dataset.transactions = dataset.createSampleTransactionData();
+      dataset.transactions = dataset.getRandomTransactionData(1);
     });
     afterEach(function() {
       dataset.transactions = [];

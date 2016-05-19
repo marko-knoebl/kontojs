@@ -4,6 +4,16 @@ var konto;
 
   "use strict";
 
+  /**
+   * Returns a deterministic random number generator based on a seed
+   */
+  var makeRand = function(seed) {
+    return function() {
+      seed ++;
+      return ((Math.sin(seed) * 10000) % 0.5) + 0.5;
+    }
+  };
+
   konto = {};
 
   konto.Dataset = function() {
@@ -72,7 +82,8 @@ var konto;
     return transaction;
   };
 
-  konto.Dataset.prototype.createSampleTransactionData = function() {
+  konto.Dataset.prototype.getRandomTransactionData = function(seed) {
+    seed = seed || 1;
     var sampleDetails = [
       'mcDonalds',
       'Billa dankt',
@@ -97,23 +108,24 @@ var konto;
     var now = new Date();
     var id = 0;
     var transactions = [];
+    var rand = makeRand(seed);
     while (date < now) {
-      if (Math.random() < 0.15) {
+      if (rand() < 0.15) {
         transactions.push({
           id: id,
           date: date.toISOString().slice(0, 10),
-          amount: Math.pow(Math.random(), 0.3) * 2000,
+          amount: Math.pow(rand(), 0.3) * 2000,
           details: 'Gehalt'
         });
       } else {
         transactions.push({
           id: id,
           date: date.toISOString().slice(0, 10),
-          amount: -Math.pow(Math.random(), 5) * 1300,
-          details: sampleDetails[Math.floor(Math.random()*sampleDetails.length)]
+          amount: -Math.pow(rand(), 5) * 1300,
+          details: sampleDetails[Math.floor(rand()*sampleDetails.length)]
         });
       }
-      var delta = Math.random() * 8;
+      var delta = rand() * 8;
       var date = new Date(date);
       date.setDate(date.getDate() + delta);
       id ++;
