@@ -102,4 +102,17 @@ describe('Dataset', function() {
     });
   });
 
+  describe('getTransactions', function() {
+    beforeEach(function() {
+      dataset.transactions = dataset.getRandomTransactionData(1);
+    });
+    afterEach(function() {
+      dataset.transactions = [];
+    });
+    it('should return all (14) matching transactions', function() {
+      var result = dataset.getTransactions({details: 'Gehalt'});
+      expect(result.length).toBe(14);
+    });
+  });
+
 });

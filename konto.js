@@ -148,17 +148,18 @@ var konto;
   };
 
   /**
-   * retrieve a transaction (e.g. by id)
-   * dataset.getTransaction({id: '1232'});
+   * retrieve a set of transactions that match a single query
+   * dataset.getTransactions({destination: 'world'});
    */
-  konto.Dataset.prototype.getTransaction = function(query) {
+  konto.Dataset.prototype.getTransactions = function(query) {
+    var result = [];
     for (var i in this.transactions) {
       var transaction = this.transactions[i];
       if (query[Object.keys(query)[0]] === transaction[Object.keys(query)[0]]) {
-        return transaction;
+        result.push(transaction);
       }
     }
-    throw new Error('query did not match any transaction')
+    return result;
   };
 
 })();
