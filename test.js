@@ -20,9 +20,6 @@ describe('Dataset', function() {
   });
 
   describe('addAccount', function() {
-    beforeEach(function() {
-      dataset.accounts = [dataset.accounts[0]];
-    });
     it('should fail if not given parameters', function() {
       expect(dataset.addAccount).toThrow(
         new Error("addAccount cannot be called without arguments")
@@ -39,9 +36,59 @@ describe('Dataset', function() {
     });
   });
 
+  describe('addTransaction', function() {
+    beforeEach(function() {
+      // create a second account
+      dataset.addAccount({
+        id: 'main',
+        openDate: '2015-02-02'
+      });
+    });
+    it('should add a transaction between two accounts', function() {
+      dataset.addTransaction({
+        origin: 'world',
+        destination: 'main',
+        amount: 23.45
+      });
+      expect(dataset.transactions.length).toBe(1);
+    });
+    it('should raise an exception if one of the accounts does not exist',
+          function() {
+      var nonExistantOrigin = function() {
+        dataset.addTransaction({origin: 'nonexistant1', destination: 'main',
+          amount: 20});
+      };
+      expect(nonExistantOrigin).toThrow(
+        new Error('account not found: nonexistant1')
+      );
+    });
+    it('should raise an exception if the amount is negative', function() {
+      var negativeAmountTransaction = function() {
+        dataset.addTransaction({
+          origin: 'world',
+          destination: 'main',
+          amount: -3}
+        );
+      };
+      expect(negativeAmountTransaction).toThrow(
+        new Error('Transaction amounts must be positive.' +
+                  'Switch origin and destination')
+      );
+    });
+    it('should raise an exception if one of the accounts or the amount' +
+       'is not specified', function() {
+      var noAmountTransaction = function() {
+        dataset.addTransaction({origin: 'world', destination: 'main'});
+      };
+      expect(noAmountTransaction).toThrow(
+        new Error("'origin', 'destination' and amount must be specified" +
+                  'for all transactions')
+      );
+    });
+  });
+
   describe('Sample dataset', function() {
     beforeEach(function() {
-      dataset.transactions.push({id: 'test', amount: 23});
       dataset.transactions = dataset.createSampleTransactionData();
     });
     afterEach(function() {

@@ -44,6 +44,34 @@ var konto;
     return account;
   };
 
+  /**
+   * Add a new transaction to the dataset
+   * dataset.addTransaction({date: '2015-02-03', origin: 'main',
+                             destination: 'world'});
+   */
+  konto.Dataset.prototype.addTransaction = function(parameters) {
+    if (parameters.amount === undefined || parameters.origin === undefined ||
+        parameters.destination === undefined) {
+      throw new Error("'origin', 'destination' and amount must be specified" +
+                  'for all transactions');
+    }
+    if (parameters.amount < 0) {
+      throw new Error('Transaction amounts must be positive.' +
+                      'Switch origin and destination');
+    }
+    try {this.getAccount({id: parameters.origin})}
+    catch (e) {throw new Error('account not found: ' + parameters.origin);}
+    try {this.getAccount({id: parameters.destination})}
+    catch (e) {throw new Error('account not found: ' + parameters.destination);}
+    var transaction = {
+      amount: parameters.amount,
+      origin: parameters.origin,
+      destination: parameters.destination
+    };
+    this.transactions.push(transaction);
+    return transaction;
+  };
+
   konto.Dataset.prototype.createSampleTransactionData = function() {
     var sampleDetails = [
       'mcDonalds',
@@ -82,7 +110,7 @@ var konto;
           id: id,
           date: date.toISOString().slice(0, 10),
           amount: -Math.pow(Math.random(), 5) * 1300,
-          details: sampleDetails[Math.floor(Math.random() * sampleDetails.length)]
+          details: sampleDetails[Math.floor(Math.random()*sampleDetails.length)]
         });
       }
       var delta = Math.random() * 8;
@@ -91,6 +119,34 @@ var konto;
       id ++;
     }
     return transactions;
+  };
+
+  /**
+   * retrieve an account (e.g. by id)
+   * dataset.getAccount({id: 'world'});
+   */
+  konto.Dataset.prototype.getAccount = function(query) {
+    for (var i in this.accounts) {
+      var account = this.accounts[i];
+      if (query[Object.keys(query)[0]] === account[Object.keys(query)[0]]) {
+        return account;
+      }
+    }
+    throw new Error('query did not match any account')
+  };
+
+  /**
+   * retrieve a transaction (e.g. by id)
+   * dataset.getTransaction({id: '1232'});
+   */
+  konto.Dataset.prototype.getTransaction = function(query) {
+    for (var i in this.transactions) {
+      var transaction = this.transactions[i];
+      if (query[Object.keys(query)[0]] === transaction[Object.keys(query)[0]]) {
+        return transaction;
+      }
+    }
+    throw new Error('query did not match any transaction')
   };
 
 })();
