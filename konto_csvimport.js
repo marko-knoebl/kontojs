@@ -74,10 +74,16 @@
       if (config.dateNormalizer) {
         date = config.dateNormalizer(date);
       }
-      if (!date.match('[0-9]{4}-[0-9]{2}-[0-9]{2}')) {
-        throw 'invalid input: date'
+      // add leading zeros if not already present
+      if (date[6] === '-') {
+        date = date.slice(0, 6) + '0' + date.slice(6);
       }
-      date = new Date(date + 'T00:00:00');
+      if (date.length === 9) {
+        date = date.slice(0, 8) + '0' + date[8]
+      }
+      if (!date.match('[0-9]{4}-[0-9]{2}-[0-9]{2}')) {
+        throw 'invalid input date:' + date;
+      }
       var amount = parseFloat(item[config.amountKey].replace('.', '')
         .replace(',', '.'));
       var details = item[config.detailsKey];
