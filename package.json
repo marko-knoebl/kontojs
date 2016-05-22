@@ -1,0 +1,17 @@
+{
+  "name": "kontojs",
+  "version": "0.0.1",
+  "description": "Manage and keep track of bank account transactions",
+  "main": "konto.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "finance"
+  ],
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "papaparse": "^4.1.2"
+  }
+}
