@@ -128,4 +128,28 @@
     return transactions;
   };
 
-})()
+  /**
+   * Add imported transactions to the dataset.
+   * Warning: this modifies the input data for now.
+   */
+  konto.Dataset.prototype.addImportedTransactions =
+      function(transactions, accountId) {
+    // make all transactions happen between specified account and world
+    // by default
+    var account = this.getAccount({id: accountId});
+    var world = this.getAccount({id: 'world'});
+    var this_ = this;
+    transactions.forEach(function(transaction) {
+      if (transaction.amount <= 0) {
+        transaction.origin = accountId;
+        transaction.destination = 'world';
+        transaction.amount = -transaction.amount;
+      } else {
+        transaction.origin = 'world';
+        transaction.destination = accountId;
+      }
+      this_.transactions.push(transaction);
+    });
+  };
+
+})();

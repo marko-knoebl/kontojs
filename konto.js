@@ -144,7 +144,8 @@ var konto;
         return account;
       }
     }
-    throw new Error('query did not match any account')
+    throw new Error('query did not match any account: ' +
+                    JSON.stringify(query));
   };
 
   /**
