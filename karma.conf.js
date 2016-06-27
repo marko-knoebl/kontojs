@@ -15,7 +15,11 @@ module.exports = function(config) {
 
     // list of files / patterns to load in the browser
     files: [
-      '*.js', 'node_modules/papaparse/papaparse.js'
+      '*.js',
+      'node_modules/papaparse/papaparse.js',
+      // this is included so tests run when kontojs is installed through npm
+      // there would probably be a better solution to do this
+      '../papaparse/papaparse.js'
     ],
 
 
