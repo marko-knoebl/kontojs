@@ -28,7 +28,7 @@ var konto;
     this.accounts = [
       {
         id: "world",
-        balance: 0
+        initialBalance: 0
       }
     ];
   };
@@ -46,7 +46,7 @@ var konto;
     }
     var account = {};
     ;['id', 'initialBalance', 'openDate'].forEach(function(parameter) {
-      if (parameters[parameter]) {
+      if (parameters[parameter] !== undefined) {
         account[parameter] = parameters[parameter];
       }
     });
@@ -62,7 +62,7 @@ var konto;
   konto.Dataset.prototype.addTransaction = function(parameters) {
     if (parameters.amount === undefined || parameters.origin === undefined ||
         parameters.destination === undefined) {
-      throw new Error("'origin', 'destination' and amount must be specified" +
+      throw new Error("'origin', 'destination' and 'amount' must be specified" +
                   'for all transactions');
     }
     if (parameters.amount < 0) {
@@ -114,6 +114,8 @@ var konto;
         transactions.push({
           id: id,
           date: date.toISOString().slice(0, 10),
+          origin: 'world',
+          destination: 'main',
           amount: Math.pow(rand(), 0.3) * 2000,
           details: 'Gehalt'
         });
@@ -121,7 +123,9 @@ var konto;
         transactions.push({
           id: id,
           date: date.toISOString().slice(0, 10),
-          amount: -Math.pow(rand(), 5) * 1300,
+          origin: 'main',
+          destination: 'world',
+          amount: Math.pow(rand(), 5) * 1300,
           details: sampleDetails[Math.floor(rand()*sampleDetails.length)]
         });
       }

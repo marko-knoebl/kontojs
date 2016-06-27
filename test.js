@@ -81,7 +81,7 @@ describe('Dataset', function() {
         dataset.addTransaction({origin: 'world', destination: 'main'});
       };
       expect(noAmountTransaction).toThrow(
-        new Error("'origin', 'destination' and amount must be specified" +
+        new Error("'origin', 'destination' and 'amount' must be specified" +
                   'for all transactions')
       );
     });
