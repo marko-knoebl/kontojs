@@ -109,9 +109,9 @@ describe('Dataset', function() {
     afterEach(function() {
       dataset.transactions = [];
     });
-    it('should return all (14) matching transactions', function() {
+    it('should return all (15) matching transactions', function() {
       var result = dataset.getTransactions({details: 'Gehalt'});
-      expect(result.length).toBe(14);
+      expect(result.length).toBe(15);
     });
   });
 
