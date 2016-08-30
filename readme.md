@@ -31,3 +31,10 @@ Import csv data (supports several Austrian banks for now)
 
     var newTransactions = kontojs.csvToKonto(someCsvString);
     ds.addTransaction(newTransactions[0]);
+
+Other methods:
+
+    ds.getAccount('mainAccount');
+    ds.setCurrentAccountBalance('mainAccount', 400);
+    ds.getTransactions({origin: 'mainAccount'}); // get all transactions that match a specific query
+    ...
