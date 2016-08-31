@@ -3,6 +3,7 @@ describe('importCsv', function() {
   var dataset;
 
   beforeEach(function() {
+    // create new dataset for each test
     dataset = new konto.Dataset();
   });
 

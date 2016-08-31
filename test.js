@@ -3,13 +3,8 @@ describe('Dataset', function() {
   var dataset;
 
   beforeEach(function() {
-    document.body.innerHTML += "<script src='konto.js' " +
-     "id='konto-script'></script>";
+    // create new dataset for each test
     dataset = new konto.Dataset();
-  });
-
-  afterEach(function() {
-    document.body.removeChild(document.getElementById('konto-script'));
   });
 
   it('should have an empty transactions array defined', function() {
@@ -48,7 +43,8 @@ describe('Dataset', function() {
       dataset.addTransaction({
         origin: 'world',
         destination: 'main',
-        amount: 23.45
+        amount: 23.45,
+        date: '2010-04-20'
       });
       expect(dataset.transactions.length).toBe(1);
     });
@@ -56,7 +52,7 @@ describe('Dataset', function() {
           function() {
       var nonExistantOrigin = function() {
         dataset.addTransaction({origin: 'nonexistant1', destination: 'main',
-          amount: 20});
+          amount: 20, date: '2010-04-20'});
       };
       expect(nonExistantOrigin).toThrow(
         new Error('account not found: nonexistant1')
@@ -67,8 +63,9 @@ describe('Dataset', function() {
         dataset.addTransaction({
           origin: 'world',
           destination: 'main',
-          amount: -3}
-        );
+          amount: -3,
+          date: '2010-03-25'
+        });
       };
       expect(negativeAmountTransaction).toThrow(
         new Error('Transaction amounts must be positive.' +
@@ -81,38 +78,80 @@ describe('Dataset', function() {
         dataset.addTransaction({origin: 'world', destination: 'main'});
       };
       expect(noAmountTransaction).toThrow(
-        new Error("'origin', 'destination' and 'amount' must be specified" +
-                  'for all transactions')
+        new Error("'origin', 'destination', 'amount' and 'date' must be" +
+                      'specified for all transactions')
       );
     });
   });
 
   describe('Random dataset', function() {
     beforeEach(function() {
-      dataset.transactions = dataset.getRandomTransactionData(1);
-    });
-    afterEach(function() {
-      dataset.transactions = [];
+      dataset.transactions = dataset.getRandomTransactionData(30);
     });
     it('should contain some data', function() {
       expect(dataset.transactions).toBeDefined();
     });
-    it('should contain a transaction for 2015-07-02', function() {
-      expect(dataset.transactions[0].date).toBe('2015-07-02');
+    it('should contain a transaction for 2013-07-02', function() {
+      expect(dataset.transactions[0].date).toBe('2013-07-02');
     });
   });
 
   describe('getTransactions', function() {
     beforeEach(function() {
-      dataset.transactions = dataset.getRandomTransactionData(1);
+      dataset.transactions = dataset.getRandomTransactionData(30);
     });
-    afterEach(function() {
-      dataset.transactions = [];
-    });
-    it('should return all (15) matching transactions', function() {
+    it('should return all (2) matching transactions', function() {
       var result = dataset.getTransactions({details: 'Gehalt'});
-      expect(result.length).toBe(15);
+      expect(result.length).toBe(2);
     });
   });
 
+  describe('getBalance', function() {
+    beforeEach(function() {
+      dataset.transactions = dataset.getRandomTransactionData(30);
+    });
+    it('should return the current balance', function() {
+      var result = dataset.getBalance('main');
+      expect(result).toBeGreaterThan(-1769);
+      expect(result).toBeLessThan(-1768);
+    });
+    it('should return the balance for a specific date', function() {
+      var result = dataset.getBalance('main', '2013-09-01');
+      expect(result).toBeGreaterThan(-4309);
+      expect(result).toBeLessThan(-4308);
+    });
+  });
+
+  describe('getTransactionsByAccount', function() {
+    beforeEach(function() {
+      dataset.transactions = dataset.getRandomTransactionData(30);
+    });
+    it('should return all transactions for a specified account', function() {
+      var transactions = dataset.getTransactionsByAccount('cash');
+      expect(transactions.length).toBe(18);
+      for (var i = 0; i <= transactions.length-2; i ++) {
+        expect(transactions[i].date).toBeLessThan(transactions[i+1].date);
+      }
+    });
+  });
+
+  describe('setCurrentAccountBalance', function() {
+    beforeEach(function() {
+      dataset.addAccount({id: 'main'})
+      dataset.transactions = dataset.getRandomTransactionData(30);
+    });
+    it('should add an initial transaction in order to adjust the resulting balance', function() {
+      dataset.setCurrentAccountBalance('main', 123);
+      var transactions = dataset.getTransactionsByAccount('main');
+      var sum = 0;
+      transactions.forEach(function(transaction) {
+        if (transaction.destination === 'main') {
+          sum += transaction.amount;
+        } else {
+          sum -= transaction.amount;
+        }
+      });
+      expect(Math.round(sum)).toBe(123);
+    });
+  });
 });
