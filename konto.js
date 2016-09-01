@@ -36,7 +36,9 @@ var konto = {};
 
   /**
    * Add a new account to the dataset
-   * dataset.addAccount({id: 'main', openDate: '2015-03-04'});
+   * dataset.addAccount({
+   *   id: 'main', name: 'Main Account',
+   *   openDate: '2015-03-04', accountType: 'bawagpsk'});
    */
   konto.Dataset.prototype.addAccount = function(parameters) {
     if (parameters === undefined) {
@@ -46,11 +48,9 @@ var konto = {};
       throw new Error("cannot create account without assigning an id");
     }
     var account = {};
-    ;['id', 'initialBalance', 'openDate'].forEach(function(parameter) {
-      if (parameters[parameter] !== undefined) {
-        account[parameter] = parameters[parameter];
-      }
-    });
+    for (var parameter in parameters) {
+      account[parameter] = parameters[parameter];
+    }
     this.accounts.push(account);
     return account;
   };
