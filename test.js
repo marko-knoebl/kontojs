@@ -121,6 +121,22 @@ describe('Dataset', function() {
       expect(result).toBeLessThan(-4308);
     });
   });
+  
+  describe('getDailyBalances', function() {
+    beforeEach(function() {
+      dataset.transactions = dataset.getRandomTransactionData(30);
+    });
+    it('should return the daily balances for all time', function() {
+      var result = dataset.getDailyBalances('main');
+      expect(result[0].balance).toBeGreaterThan(16.8);
+      expect(result[0].balance).toBeLessThan(16.9);
+    });
+    it('should return the balance for a specific date range', function() {
+      var result = dataset.getDailyBalances('main', '2013-08-12', '2013-08-16');
+      expect(result[0].balance).toBeGreaterThan(4186);
+      expect(result[0].balance).toBeLessThan(4187);
+    });
+  });
 
   describe('getTransactionsByAccount', function() {
     beforeEach(function() {

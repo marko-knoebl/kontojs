@@ -202,6 +202,43 @@ var konto = {};
     });
     return balance;
   };
+  
+  var getNextDay = function(day) {
+    // given an ISO date string (eg '2014-02-10'), return the next day
+    var date = new Date(day);
+    date.setDate(date.getDate() + 1);
+    return date.toISOString().slice(0, 10);
+  };
+  
+  /**
+   * get the balances of an account for a specific date range
+   */
+  konto.Dataset.prototype.getDailyBalances = function(account, startDate, endDate) {
+    if (account === undefined) {
+      throw new Error('account must be specified');
+    }
+    var dailyBalances = [];
+    if (!startDate) {
+      startDate = this.transactions[0].date;
+    }
+    if (!endDate) {
+      endDate = this.transactions[this.transactions.length-1].date;
+    }
+    var date = startDate;
+    var previousBalance = 0;
+    var unprocessedTransactionIndex = 0;
+    while (date <= endDate) {
+      // increase "date" and add all unprocessed transactions that occur before it
+      // copy the date
+      date = getNextDay(date);
+      while (unprocessedTransactionIndex < this.transactions.length && this.transactions[unprocessedTransactionIndex].date < date) {
+        previousBalance += this.transactions[unprocessedTransactionIndex].amount;
+        unprocessedTransactionIndex ++;
+      }
+      dailyBalances.push({date: date, balance: previousBalance});
+    }
+    return dailyBalances;
+  };
 
   /**
    * retrieve a set of transactions that match a single query
