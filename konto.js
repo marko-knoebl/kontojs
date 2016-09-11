@@ -218,6 +218,10 @@ var konto = {};
       throw new Error('account must be specified');
     }
     var dailyBalances = [];
+    var transactions = this.getTransactionsByAccount(account);
+    if (transactions.length === 0) {
+      return [];
+    }
     if (!startDate) {
       startDate = this.transactions[0].date;
     }
@@ -232,7 +236,12 @@ var konto = {};
       // copy the date
       date = getNextDay(date);
       while (unprocessedTransactionIndex < this.transactions.length && this.transactions[unprocessedTransactionIndex].date < date) {
-        previousBalance += this.transactions[unprocessedTransactionIndex].amount;
+        var unprocessedTransaction = this.transactions[unprocessedTransactionIndex];
+        if (unprocessedTransaction.origin === account) {
+          previousBalance -= unprocessedTransaction.amount;
+        } else {
+          previousBalance += unprocessedTransaction.amount;
+        }
         unprocessedTransactionIndex ++;
       }
       dailyBalances.push({date: date, balance: previousBalance});
