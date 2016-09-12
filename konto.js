@@ -206,7 +206,7 @@ var konto = {};
   var getNextDay = function(day) {
     // given an ISO date string (eg '2014-02-10'), return the next day
     var date = new Date(day);
-    date.setDate(date.getDate() + 1);
+    date.setUTCDate(date.getUTCDate() + 1);
     return date.toISOString().slice(0, 10);
   };
   
