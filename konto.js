@@ -239,7 +239,7 @@ var konto = {};
         var unprocessedTransaction = this.transactions[unprocessedTransactionIndex];
         if (unprocessedTransaction.origin === account) {
           previousBalance -= unprocessedTransaction.amount;
-        } else {
+        } else if (uprocessedTransaction.destination === account){
           previousBalance += unprocessedTransaction.amount;
         }
         unprocessedTransactionIndex ++;
