@@ -128,13 +128,13 @@ describe('Dataset', function() {
     });
     it('should return the daily balances for all time', function() {
       var result = dataset.getDailyBalances('main');
-      expect(result[0].balance).toBeGreaterThan(16.8);
-      expect(result[0].balance).toBeLessThan(16.9);
+      expect(result[2].balance).toBeGreaterThan(-634);
+      expect(result[2].balance).toBeLessThan(-633);
     });
     it('should return the balance for a specific date range', function() {
       var result = dataset.getDailyBalances('cash', '2013-08-12', '2013-08-16');
-      expect(result[0].balance).toBeGreaterThan(4124);
-      expect(result[0].balance).toBeLessThan(4125);
+      expect(result[0].balance).toBeGreaterThan(1368);
+      expect(result[0].balance).toBeLessThan(1369);
     });
   });
 
