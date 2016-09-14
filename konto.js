@@ -223,10 +223,10 @@ var konto = {};
       return [];
     }
     if (!startDate) {
-      startDate = this.transactions[0].date;
+      startDate = transactions[0].date;
     }
     if (!endDate) {
-      endDate = this.transactions[this.transactions.length-1].date;
+      endDate = transactions[transactions.length-1].date;
     }
     var date = startDate;
     var previousBalance = 0;
@@ -235,8 +235,8 @@ var konto = {};
       // increase "date" and add all unprocessed transactions that occur before it
       // copy the date
       date = getNextDay(date);
-      while (unprocessedTransactionIndex < this.transactions.length && this.transactions[unprocessedTransactionIndex].date < date) {
-        var unprocessedTransaction = this.transactions[unprocessedTransactionIndex];
+      while (unprocessedTransactionIndex < transactions.length && transactions[unprocessedTransactionIndex].date < date) {
+        var unprocessedTransaction = transactions[unprocessedTransactionIndex];
         if (unprocessedTransaction.origin === account) {
           previousBalance -= unprocessedTransaction.amount;
         } else if (unprocessedTransaction.destination === account){
